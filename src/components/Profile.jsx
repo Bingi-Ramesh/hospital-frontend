@@ -8,8 +8,10 @@ import axios from 'axios';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const API_HOST = 'http://localhost:3000';   // change for prod
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
+const API_HOST = `${API_BASE}`;   // change for prod
 const Profile = () => {
   const navigate = useNavigate();
 
@@ -107,7 +109,7 @@ const Profile = () => {
   if (!userData) {
     return (
       <Container maxWidth="sm">
-        <Typography variant="h5" align="center" sx={{ mt: 5 }}>Loading profile…</Typography>
+        <Typography variant="h5" align="center" sx={{ mt: 5 }}>Loading profile…</Typography>
       </Container>
     );
   }
@@ -118,7 +120,7 @@ const Profile = () => {
         <Card sx={{ boxShadow: 3, borderRadius: 2, backgroundColor: '#d0e7ff', p: 3 }}>
           <CardContent>
             <Typography variant="h4" align="center" gutterBottom color="primary">
-              User Profile
+              User Profile
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
@@ -152,21 +154,21 @@ const Profile = () => {
 
                 {selectedFile && (
                   <Button onClick={handleUpload} size="small" sx={{ mt: 1 }}>
-                    Save Image
+                    Save Image
                   </Button>
                 )}
               </Grid>
 
               {/* user details */}
               <Grid item xs={12} md={4}>
-                <Typography variant="h6">Full Name:</Typography>
+                <Typography variant="h6">Full Name:</Typography>
                 <Typography>{userData.fullname || 'N/A'}</Typography>
                 <Typography variant="h6" sx={{ mt: 1 }}>Age:</Typography>
                 <Typography>{userData.age || 'N/A'}</Typography>
               </Grid>
 
               <Grid item xs={12} md={4}>
-                <Typography variant="h6">User Type:</Typography>
+                <Typography variant="h6">User Type:</Typography>
                 <Typography>{role || 'N/A'}</Typography>
                 <Typography variant="h6" sx={{ mt: 1 }}>Email:</Typography>
                 <Typography>{userData.email || 'N/A'}</Typography>

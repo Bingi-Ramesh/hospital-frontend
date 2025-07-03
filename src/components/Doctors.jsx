@@ -16,6 +16,7 @@ import {
   Alert
 } from '@mui/material';
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 function Doctors() {
   const [snackbar,     setSnackbar]   = useState({ open: false, message: '', severity: 'info' });
@@ -24,12 +25,12 @@ function Doctors() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState('');
-
+ 
   useEffect(() => {
     const fetchDoctors = async () => {
       setLoading(true);
       try {
-        const res = await axios.get('http://localhost:3000/api/getDoctors');
+        const res = await axios.get(`${API_BASE}/api/getDoctors`);
         setDoctors(res.data.doctors);
       } catch (err) {
         console.error('Error fetching doctors:', err);
@@ -75,7 +76,7 @@ function Doctors() {
     const patientName = user.fullname;
 
     try {
-      const res = await axios.post('http://localhost:3000/api/register-appointment', {
+      const res = await axios.post(`${API_BASE}/api/register-appointment`, {
         doctorId: selectedDoctor._id,
         doctorName: selectedDoctor.fullname,
         patientId,
@@ -112,7 +113,7 @@ function Doctors() {
                 <img
                   src={
                     doctor.profileImg
-                      ? `http://localhost:3000${doctor.profileImg.startsWith('/') ? '' : '/'}${doctor.profileImg}`
+                      ? `${API_BASE}${doctor.profileImg.startsWith('/') ? '' : '/'}${doctor.profileImg}`
                       : '/default-profile.jpg'
                   }
                   alt={doctor.fullName}

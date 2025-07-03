@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Typography, Button, TextField, Box, Grid, Rating, Snackbar, Alert, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const RatingsAndReviews = () => {
    
@@ -33,7 +34,7 @@ const RatingsAndReviews = () => {
   // Fetch reviews and calculate average ratings
   const fetchReviews = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/get-all-reviews');
+      const response = await axios.get(`${API_BASE}/api/get-all-reviews`);
       setReviews(response.data.reviews);
 
       // Calculate average ratings for each category
@@ -90,7 +91,7 @@ const RatingsAndReviews = () => {
 
   const deleteReview = async (reviewId) => {
     try {
-      await axios.post('http://localhost:3000/api/delete-review', { reviewId });
+      await axios.post(`${API_BASE}/api/delete-review`, { reviewId });
       setSnackbar({ open: true, message: 'Review deleted successfully.', severity: 'success' });
       fetchReviews(); // Refresh reviews after deletion
     } catch (error) {
@@ -104,7 +105,7 @@ const RatingsAndReviews = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/add-review', reviewData);
+      const response = await axios.post(`${API_BASE}/api/add-review`, reviewData);
       setSnackbar({ open: true, message: response.data.msg, severity: 'success' });
 
       // Fetch the updated reviews and average ratings after submission

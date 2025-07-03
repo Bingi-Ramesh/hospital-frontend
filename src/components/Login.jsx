@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Container,
   TextField,
@@ -11,6 +11,7 @@ import {
   Alert
 } from '@mui/material';
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
   const [snackbar,     setSnackbar]   = useState({ open: false, message: '', severity: 'info' });
@@ -18,8 +19,8 @@ const Login = () => {
     email: '',
     password: '',
   });
-
-  const navigate = useNavigate();
+ 
+ // const navigate = useNavigate();
 
   // Set default isLoggedIn to false once when component loads
   useEffect(() => {
@@ -36,7 +37,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/api/login', formData);
+      const res = await axios.post(`${API_BASE}/api/login`, formData);
       const { message, role, user } = res.data;
 
       localStorage.setItem('role', role);

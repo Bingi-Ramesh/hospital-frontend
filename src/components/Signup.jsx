@@ -12,6 +12,7 @@ import {
 
 } from '@mui/material';
 import axios from 'axios';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 const Signup = () => {
   const [snackbar,     setSnackbar]   = useState({ open: false, message: '', severity: 'info' });
@@ -34,7 +35,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const { fullName, age, email, password } = formData;
-      const endpoint = `http://localhost:3000/api/signup/patient`;
+      const endpoint = `${API_BASE}/api/signup/patient`;
 
       await axios.post(endpoint, {
         fullname: fullName,

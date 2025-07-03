@@ -1,4 +1,5 @@
 // src/components/Appointments.jsx
+
 import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import {
@@ -20,7 +21,10 @@ import {
   Box,
 } from '@mui/material';
 
-const API = 'http://localhost:3000/api';
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+
+
+const API = `${API_BASE}/api`;
 
 const emptyBill = {
   appointmentFee: '',
@@ -33,6 +37,7 @@ const emptyBill = {
 };
 
 const Appointments = () => {
+ 
   /* ────────────── user & role ────────────── */
   const user  = JSON.parse(localStorage.getItem('user')) || {};
   const role  = (localStorage.getItem('role') || '').toLowerCase();
