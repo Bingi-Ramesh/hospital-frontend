@@ -13,6 +13,7 @@ import RatingsAndReviews from './components/Reviews';
 
 import Signup from './components/Signup';
 import Login from './components/Login';
+import DoctorDescription from './components/DoctorDescription';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
@@ -35,6 +36,7 @@ console.log(isLoggedIn)
           <Route path="/about" element={<About />} />
           <Route path="/reviews" element={<RatingsAndReviews />} />
           <Route path="/doctors" element={<Doctors />} />
+          <Route path="/doctors/doctordescription/:id" element={<DoctorDescription />} />
           <Route path="/appointments" element={<Appointments />} />
         
          

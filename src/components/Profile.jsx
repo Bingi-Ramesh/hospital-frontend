@@ -1,26 +1,29 @@
 import { useEffect, useState } from 'react';
 import {
-  Container, Typography, Box, Grid, Card, CardContent,
-  Divider, Avatar, Snackbar, Alert, Button
+  Container, Typography, Box, Grid, Card, Divider, Avatar, Snackbar, Alert,
+  Button, List, ListItem, ListItemText, ListItemIcon, IconButton
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_HOST = `${API_BASE}`;
 
-const API_HOST = `${API_BASE}`;   // change for prod
 const Profile = () => {
   const navigate = useNavigate();
 
-  const [userData,     setUserData]   = useState(null);
-  const [role,         setRole]       = useState('');
+  const [userData, setUserData] = useState(null);
+  const [role, setRole] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [preview,      setPreview]    = useState('');
-
-  const [snackbar,     setSnackbar]   = useState({ open: false, message: '', severity: 'info' });
+  const [preview, setPreview] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+  const [menuOpen, setMenuOpen] = useState(true); // ⬅ Sidebar toggle state
 
   /* ─────────── load user on mount ─────────── */
   useEffect(() => {
@@ -39,12 +42,12 @@ const Profile = () => {
 
   /* ─────────── helpers ─────────── */
   const getImgSrc = () => {
-    if (preview) return preview;                        // blob preview
+    if (preview) return preview;
     if (userData?.profileImg) {
       const path = userData.profileImg.startsWith('/')
         ? userData.profileImg
         : '/' + userData.profileImg;
-      return `${API_HOST}${path}`;                      // → http://localhost:3000/uploads/...
+      return `${API_HOST}${path}`;
     }
     return '/default-avatar.png';
   };
@@ -60,7 +63,6 @@ const Profile = () => {
     if (!selectedFile || !userData?._id) {
       return setSnackbar({ open: true, message: 'Missing image or user ID', severity: 'warning' });
     }
-
     try {
       const formData = new FormData();
       formData.append('id', userData._id);
@@ -70,7 +72,7 @@ const Profile = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const updatedUser = data.user;                    // backend returns { user: ... }
+      const updatedUser = data.user;
       setUserData(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       setPreview('');
@@ -105,7 +107,6 @@ const Profile = () => {
 
   const handleSnackbarClose = () => setSnackbar({ ...snackbar, open: false });
 
-  /* ─────────── render ─────────── */
   if (!userData) {
     return (
       <Container maxWidth="sm">
@@ -115,73 +116,135 @@ const Profile = () => {
   }
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ mt: 5, mb: 5 }}>
-        <Card sx={{ boxShadow: 3, borderRadius: 2, backgroundColor: '#d0e7ff', p: 3 }}>
-          <CardContent>
-            <Typography variant="h4" align="center" gutterBottom color="primary">
-              User Profile
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
+    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f5f9ff' }}>
+      
+      {/* Toggle Button */}
+      <IconButton
+  onClick={() => setMenuOpen(!menuOpen)}
+  sx={{
+    position: 'fixed',
+    top: 75,
+    left: menuOpen ? 300 : 10,
+    zIndex: 2000,
+    background: '#fff',
+    boxShadow: 1,
+    color: menuOpen ? 'black' : 'green',
+    transition: 'left 0.3s ease',
+  }}
+>
+  {menuOpen ? <CloseIcon /> : <MenuIcon />}
+</IconButton>
 
-            <Grid container spacing={2} alignItems="center">
-              {/* profile image + controls */}
-              <Grid item xs={12} md={4} align="center">
-                <Avatar
-                  src={getImgSrc()}
-                  alt="Profile"
-                  sx={{ width: 150, height: 150, borderRadius: '50%', boxShadow: 2 }}
-                />
+      {/* Sidebar */}
+      {menuOpen && (
+        <Box sx={{ width: 280, backgroundColor: '#1976d2', color: '#fff', p: 3 }}>
 
-                <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center' }}>
-                  <label htmlFor="upload-input">
-                    <input
-                      id="upload-input"
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={handleFileChange}
-                    />
-                    <UploadFileIcon sx={{ cursor: 'pointer', fontSize: 28 }} titleAccess="Upload image" />
-                  </label>
-
-                  <DeleteIcon
-                    onClick={() => { setSelectedFile(null); setPreview(''); handleRemove(); }}
-                    sx={{ cursor: 'pointer', fontSize: 28 }}
-                    titleAccess="Remove image"
+          <Box sx={{ textAlign: 'center' }}>
+           
+           
+            <Grid item xs={12} md={4} align="center">
+              <Avatar
+                src={getImgSrc()}
+                alt="Profile"
+                sx={{ width: 150, height: 150, borderRadius: '50%', boxShadow: 2 }}
+              />
+              <Box sx={{ mt: 2, display: 'flex', gap: 2, justifyContent: 'center' }}>
+                <label htmlFor="upload-input">
+                  <input
+                    id="upload-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
                   />
-                </Box>
-
-                {selectedFile && (
-                  <Button onClick={handleUpload} size="small" sx={{ mt: 1 }}>
-                    Save Image
-                  </Button>
-                )}
-              </Grid>
-
-              {/* user details */}
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6">Full Name:</Typography>
-                <Typography>{userData.fullname || 'N/A'}</Typography>
-                <Typography variant="h6" sx={{ mt: 1 }}>Age:</Typography>
-                <Typography>{userData.age || 'N/A'}</Typography>
-              </Grid>
-
-              <Grid item xs={12} md={4}>
-                <Typography variant="h6">User Type:</Typography>
-                <Typography>{role || 'N/A'}</Typography>
-                <Typography variant="h6" sx={{ mt: 1 }}>Email:</Typography>
-                <Typography>{userData.email || 'N/A'}</Typography>
-              </Grid>
+                  <UploadFileIcon sx={{ cursor: 'pointer', fontSize: 28 }} titleAccess="Upload image" />
+                </label>
+                <DeleteIcon
+                  onClick={() => { setSelectedFile(null); setPreview(''); handleRemove(); }}
+                  sx={{ cursor: 'pointer', fontSize: 28 }}
+                  titleAccess="Remove image"
+                />
+              </Box>
+              {selectedFile && (
+                <Button onClick={handleUpload} color='fff' size="small" sx={{ mt: 1 }}>
+                  Save Image
+                </Button>
+              )}
             </Grid>
+            <Typography variant="h6" sx={{ mt: 2 }}>{userData.fullname || 'N/A'}</Typography>
+            <Typography variant="body2">{role || 'N/A'}</Typography>
+          </Box>
 
-            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" onClick={handleLogout}>Logout</Button>
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
+          <Divider sx={{ my: 2, backgroundColor: '#fff' }} />
 
+          <List>
+            <ListItem>
+              <ListItemIcon><PersonIcon sx={{ color: '#fff' }} /></ListItemIcon>
+              <ListItemText primary="Profile Details" />
+              
+            </ListItem>
+            <ListItem> <Typography>Name:{userData.fullname || 'N/A'}</Typography> </ListItem>
+           
+            <ListItem> <Typography>Email:{userData.email || 'N/A'}</Typography> </ListItem>
+            <ListItem>  <Typography>Age:{userData.age || 'N/A'}</Typography> </ListItem>
+            <ListItem button onClick={handleLogout}>
+              <ListItemIcon><LogoutIcon sx={{ color: '#fff' }} /></ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          </List>
+        </Box> 
+      )}
+
+      {/* Content */}
+      <Box sx={{ flexGrow: 1, p: 4 }}>
+      <Card sx={{ p: 3 }}>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ textAlign: "center", mb: 1 }}
+        >
+         {userData.fullname || 'N/A'}
+        </Typography>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{ textAlign: "center", mb: 3 }}
+        >
+         {role || 'N/A'}
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#d32f2f",
+              "&:hover": { backgroundColor: "#9a0007" },
+            }}
+            onClick={() => navigate("/reviews")}
+          >
+            Dashboard
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#d32f2f",
+              "&:hover": { backgroundColor: "#9a0007" },
+            }}
+            onClick={() => navigate("/appointments")}
+          >
+            Appointments
+          </Button>
+        </Box>
+      </Card>
+    </Box>
+
+
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
@@ -192,7 +255,7 @@ const Profile = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Container>
+    </Box>
   );
 };
 

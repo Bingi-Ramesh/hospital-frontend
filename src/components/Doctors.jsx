@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -16,7 +17,7 @@ import {
   Alert
 } from '@mui/material';
 import axios from 'axios';
-const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_BASE = import.meta.env.VITE_BACKEND_URL?.trim();
 
 function Doctors() {
   const [snackbar,     setSnackbar]   = useState({ open: false, message: '', severity: 'info' });
@@ -25,7 +26,8 @@ function Doctors() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState('');
- 
+
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchDoctors = async () => {
       setLoading(true);
@@ -61,6 +63,9 @@ function Doctors() {
     setAppointmentDate('');
     setOpenDialog(false);
   };
+
+
+
 
   const handleSubmit = async () => {
     if (!appointmentDate) return alert("Select date");
@@ -110,10 +115,16 @@ function Doctors() {
           <Grid item xs={12} sm={6} md={4} key={doctor.email}>
             <Card sx={{ display: 'flex', flexDirection: 'row', maxWidth: 600, margin: 'auto' }}>
               <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: 2, mb: 5 }}>
+              {console.log(API_BASE,doctor.profileImg)};
                 <img
+                  // src={
+                  //   doctor.profileImg
+                  //     ? `${API_BASE}${doctor.profileImg.startsWith('/') ? '' : '/'}${doctor.profileImg}`
+                  //     : '/default-profile.jpg'
+                  // }
                   src={
-                    doctor.profileImg
-                      ? `${API_BASE}${doctor.profileImg.startsWith('/') ? '' : '/'}${doctor.profileImg}`
+                    doctor?.profileImg
+                      ? `${API_BASE}${doctor.profileImg}`
                       : '/default-profile.jpg'
                   }
                   alt={doctor.fullName}
@@ -129,10 +140,25 @@ function Doctors() {
 
               <Box sx={{ flex: 1, padding: 2 }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{doctor.fullname}</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Dr. {doctor.fullname}</Typography>
                   <Typography variant="body1" sx={{ color: 'text.secondary' }}>{doctor.specializations}</Typography>
                   <Typography variant="body1" sx={{ color: 'text.secondary' }}>{doctor.course}</Typography>
-                  <Typography variant="body2" color="text.secondary">{doctor.email}</Typography>
+                  {/* <Typography variant="body2" color="text.secondary">Experience: {doctor.experience || 0}</Typography> */}
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="success"
+                    onClick={() => navigate(`/doctors/doctordescription/${doctor._id}`, { state: { doctor } })}
+                    sx={{
+                      mt: 2, // margin-top (theme spacing * 2 → usually 16px)
+                     
+                      borderColor: 'orange', // darker green border
+                    
+                    }}
+                  >
+                    View  Details
+                  </Button>
+                  {/* <Typography variant="body2" color="text.secondary">{doctor.email}</Typography> */}
                 </CardContent>
 
                 <CardActions>
@@ -141,6 +167,12 @@ function Doctors() {
                     variant="outlined"
                     color="success"
                     onClick={() => handleOpenDialog(doctor)}
+                    sx={{
+                    
+                     
+                      borderColor: 'orange', // darker green border
+                    
+                    }}
                   >
                     Book Appointment
                   </Button>
