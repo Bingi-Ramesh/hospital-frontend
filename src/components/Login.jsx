@@ -108,6 +108,12 @@ const Login = () => {
             </Grid>
 
             <Grid item xs={12}>
+            <Typography align="center" color="black">
+                Forgot Password?{' '}
+                <Link to="/forgot-password" style={{ color: '	#2196F3' }}>
+                  click here to reset
+                </Link>
+              </Typography>
               <Typography align="center" color="black">
                 Don't have an account?{' '}
                 <Link to="/signup" style={{ color: '	#2196F3' }}>

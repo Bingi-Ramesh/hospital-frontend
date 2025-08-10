@@ -14,6 +14,7 @@ import RatingsAndReviews from './components/Reviews';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import DoctorDescription from './components/DoctorDescription';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
@@ -34,6 +35,7 @@ console.log(isLoggedIn)
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reviews" element={<RatingsAndReviews />} />
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/doctordescription/:id" element={<DoctorDescription />} />
