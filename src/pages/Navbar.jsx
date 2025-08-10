@@ -33,7 +33,7 @@ const Navbar = ({ loggedIn, setLoggedIn }) => {
   const menuItems = ['Home', 'About Us'];
 
   if (loggedIn) {
-    menuItems.push('Doctors', 'Appointments', 'Profile','Dashboard');
+    menuItems.push('Doctors', 'Appointments', 'Profile','Feedback');
     if (isAdmin) {
       menuItems.push('Approvals');
     }
@@ -107,7 +107,7 @@ const Navbar = ({ loggedIn, setLoggedIn }) => {
                 </Button>
               )}
                <Button key="Reviews" color="inherit" component={Link} to="/reviews">
-            Dashboard
+            Feedback
           </Button>
               <Button key="Profile" color="inherit" component={Link} to="/profile">
                 Profile
@@ -160,7 +160,7 @@ const Navbar = ({ loggedIn, setLoggedIn }) => {
               Appointments
             </MenuItem>
             <Button key="Reviews" color="inherit" component={Link} to="/reviews">
-            Dashboard
+            Feedback
           </Button>
             <MenuItem key="Profile" onClick={handleMenuClose} component={Link} to="/profile">
               Profile

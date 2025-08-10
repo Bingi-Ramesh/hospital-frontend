@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Box, Typography, Button } from '@mui/material';
-import carousel1 from '../assets/carousel1.jpg';
+import { Box,Button } from '@mui/material';
+import carousel1 from '../assets/carousel1.jpeg';
 import carousel2 from '../assets/carousel2.jpg';
 
-import carousel4 from '../assets/carousel4.webp';
-import carousel5 from '../assets/carousel5.png';
-import carousel7 from '../assets/carousel7.jpg'
+
+import carousel5 from '../assets/carousel5.jpg';
+
 import carousel8 from '../assets/carousel8.jpg'
 const carouselItems = [
   {
@@ -85,7 +85,7 @@ const Carousel = () => {
       />
 
       {/* Text Overlay */}
-      <Box
+      {/* <Box
         sx={{
           position: 'absolute',
           top: '50%',
@@ -104,7 +104,7 @@ const Carousel = () => {
         <Typography variant="subtitle1">
           {carouselItems[currentIndex].description}
         </Typography>
-      </Box>
+      </Box> */}
 
       {/* Navigation Buttons */}
       <Box

@@ -19,6 +19,8 @@ import {
   DialogActions,
   TextField,
   Box,
+  Tabs,
+  Tab
 } from '@mui/material';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL;
@@ -48,6 +50,8 @@ const Appointments = () => {
   const userId         = user._id;
 
   /* ────────────── state ────────────── */
+
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading]           = useState(true);
   const [snack, setSnack]               = useState({ open: false, msg: '', sev: 'info' });
@@ -60,6 +64,9 @@ const Appointments = () => {
   // patient view dialog
   const [viewOpen, setViewOpen]   = useState(false);
   const [viewBill, setViewBill]   = useState(null);
+  const [tab, setTab] = useState(0);
+const handleTabChange = (e, newValue) => setTab(newValue);
+const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'past'
 
   const showSnack  = (msg, sev='info') => setSnack({ open: true, msg, sev });
   const closeSnack = ()                 => setSnack(s => ({ ...s, open: false }));
@@ -194,9 +201,18 @@ const Appointments = () => {
                   
                   {isPast && isReceptionist && (
                     <>
-                     <Typography variant="body2">
-                     Bill Status:&nbsp;{appt.status || "Not generated"}
-                   </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: (appt.status || "Not generated").toLowerCase().includes("not")
+                            ? "red"      // plain red text
+                            : "green"    // plain green text
+                        }}
+                      >
+                        Bill Status:&nbsp;{appt.status || "Not generated"}
+                      </Typography>
+
+
                     <Button
                       size="small"
                       onClick={() => openBillDialog(appt._id)}
@@ -208,15 +224,25 @@ const Appointments = () => {
 
                   {isPast && isPatient && (
                     <>
-                      <Typography variant="body2">
-                     Bill Status:&nbsp;{appt.status || "Not generated"}
-                   </Typography>
-                   <Button
-                      size="small"
-                      onClick={() => openViewDialog(appt._id)}
-                    >
-                      View&nbsp;Bill
-                    </Button>
+                     <Typography
+                        variant="body2"
+                        sx={{
+                          color: (appt.status || "Not generated").toLowerCase().includes("not")
+                            ? "red"      // plain red text
+                            : "green"    // plain green text
+                        }}
+                      >
+                        Bill Status:&nbsp;{appt.status || "Not generated"}
+                      </Typography>
+                      {!(appt.status || "Not generated").toLowerCase().includes("not") && (
+                        <Button
+                          size="small"
+                          onClick={() => openViewDialog(appt._id)}
+                        >
+                          View&nbsp;Bill
+                        </Button>
+                      )}
+
                     </>
                    
                   )}
@@ -238,8 +264,29 @@ const Appointments = () => {
         Appointments
       </Typography>
 
-      {renderSection('Upcoming Appointments', upcoming, true, false)}
-      {renderSection('Past Appointments', past, false, true)}
+      {/* {renderSection('Upcoming Appointments', upcoming, true, false)}
+      {renderSection('Past Appointments', past, false, true)} */}
+      {/* ───── Sub-navbar ───── */}
+      <Box sx={{ display: 'flex', gap: 2, mb: 2, justifyContent: 'center' }}>
+        <Button
+          variant={activeTab === 'upcoming' ? 'contained' : 'outlined'}
+          onClick={() => setActiveTab('upcoming')}
+        >
+          Upcoming Appointments
+        </Button>
+        <Button
+          variant={activeTab === 'past' ? 'contained' : 'outlined'}
+          onClick={() => setActiveTab('past')}
+        >
+          Past Appointments
+        </Button>
+      </Box>
+
+      {/* ───── Show the selected section ───── */}
+      {activeTab === 'upcoming'
+        ? renderSection('Upcoming Appointments', upcoming, true, false)
+        : renderSection('Past Appointments', past, false, true)}
+
 
       {/* ───── Snackbar ───── */}
       <Snackbar

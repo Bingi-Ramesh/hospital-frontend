@@ -227,7 +227,7 @@ const Profile = () => {
             }}
             onClick={() => navigate("/reviews")}
           >
-            Dashboard
+            Feedback
           </Button>
           <Button
             variant="contained"
