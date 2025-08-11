@@ -153,137 +153,207 @@ export default function Home() {
         </Box>
 
         {/* Hygiene Products Section */}
-        <Box sx={{
-          marginY: 4,
-          backgroundColor: "#E1F5FE",  // Light blue background color
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 4,
-          display: "flex", // Flex to align image on the right side
-          alignItems: "center", // Vertically center the content
-        }}>
-          <Paper elevation={3} sx={{ padding: 3, backgroundColor: "rgba(255, 255, 255, 0.7)", width: "70%" }}>
-            <Typography variant="h5" gutterBottom>
-              Free Hygiene Products for Patients and Caretakers
-            </Typography>
-            <Typography>
-              To ensure cleanliness and safety, we provide the following hygiene items <b>free of charge</b>:
-            </Typography>
-            <Grid container spacing={3} sx={{ marginTop: 2 }}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Typography>🧴 Hand Sanitizers (e.g., Dettol, Lifebuoy)</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Typography>🧻 Disinfectant Wipes</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Typography>🧼 Antibacterial Soap</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Typography>🚰 Bottled Water for Patients</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Typography>😷 Masks (for patients and caretakers)</Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-          <Box sx={{ marginLeft: 3 }}>
-            <img
-              src={hygieneImage} // Hygiene image
-              alt="Hygiene Products"
-              style={{
-                width: "150px",
-                height: "150px",
-                borderRadius: "50%", // Circle form for the image
-                objectFit: "cover",
-              }}
-            />
-          </Box>
-        </Box>
+        <Box
+  sx={{
+    marginY: 4,
+    backgroundColor: "#E1F5FE",
+    padding: 4,
+    borderRadius: 2,
+    boxShadow: 4,
+    display: "flex",
+    flexDirection: { xs: "column", md: "row-reverse" }, // Image first on mobile, text first on desktop
+    alignItems: "center",
+  }}
+>
+  {/* Image */}
+  <Box
+    sx={{
+      marginBottom: { xs: 3, md: 0 },
+      marginLeft: { md: 3 },
+      display: "flex",
+      justifyContent: "center",
+      width: { xs: "100%", md: "auto" },
+    }}
+  >
+    <img
+      src={hygieneImage}
+      alt="Hygiene Products"
+      style={{
+        width: "150px",
+        height: "150px",
+        borderRadius: "50%",
+        objectFit: "cover",
+      }}
+    />
+  </Box>
+
+  {/* Text */}
+  <Paper
+    elevation={3}
+    sx={{
+      padding: 3,
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: { xs: "100%", md: "70%" },
+    }}
+  >
+    <Typography variant="h5" gutterBottom>
+      Free Hygiene Products for Patients and Caretakers
+    </Typography>
+    <Typography>
+      To ensure cleanliness and safety, we provide the following hygiene items{" "}
+      <b>free of charge</b>:
+    </Typography>
+    <Grid container spacing={3} sx={{ marginTop: 2 }}>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography>🧴 Hand Sanitizers (e.g., Dettol, Lifebuoy)</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography>🧻 Disinfectant Wipes</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography>🧼 Antibacterial Soap</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography>🚰 Bottled Water for Patients</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Typography>😷 Masks (for patients and caretakers)</Typography>
+      </Grid>
+    </Grid>
+  </Paper>
+</Box>
+
+
 
         {/* Emergency Services Section */}
-        <Box sx={{
-          marginY: 4,
-          backgroundColor: "#FF7961",  // Red background for urgency
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 4,
-          display: "flex", // Flex to align image on right side
-          alignItems: "center", // Vertically center the content
-        }}>
-          <Paper elevation={3} sx={{ padding: 3, backgroundColor: "rgba(255, 255, 255, 0.7)", width: "70%" }}>
-            <Typography variant="h5" gutterBottom>
-              Emergency Services
-            </Typography>
-            <Typography>
-              Our 24/7 emergency services are always ready to provide immediate care during critical situations. Your safety is our priority.
-            </Typography>
-            <Grid container spacing={3} sx={{ marginTop: 2 }}>
-              <Grid item xs={12} sm={6} md={6}>
-                <Typography>🚑 Immediate Medical Care Available</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                <Typography>📞 24/7 Contact for Emergencies</Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-          <Box sx={{ marginLeft: 3 }}>
-            <img
-              src={emergencyImage} // Emergency image
-              alt="Emergency Services"
-              style={{
-                width: "150px",
-                height: "150px",
-                borderRadius: "50%", // Circle form for the image
-                objectFit: "cover",
-              }}
-            />
-          </Box>
-        </Box>
+        <Box
+  sx={{
+    marginY: 4,
+    backgroundColor: "#FF7961", // Red background for urgency
+    padding: 4,
+    borderRadius: 2,
+    boxShadow: 4,
+    display: "flex",
+    flexDirection: { xs: "column", md: "row-reverse" }, // Image first on mobile, right side on desktop
+    alignItems: "center",
+  }}
+>
+  {/* Image */}
+  <Box
+    sx={{
+      marginBottom: { xs: 3, md: 0 },
+      marginLeft: { md: 3 },
+      display: "flex",
+      justifyContent: "center",
+      width: { xs: "100%", md: "auto" },
+    }}
+  >
+    <img
+      src={emergencyImage}
+      alt="Emergency Services"
+      style={{
+        width: "150px",
+        height: "150px",
+        borderRadius: "50%",
+        objectFit: "cover",
+      }}
+    />
+  </Box>
+
+  {/* Text */}
+  <Paper
+    elevation={3}
+    sx={{
+      padding: 3,
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: { xs: "100%", md: "70%" }, // Full width on mobile
+    }}
+  >
+    <Typography variant="h5" gutterBottom>
+      Emergency Services
+    </Typography>
+    <Typography>
+      Our 24/7 emergency services are always ready to provide immediate care during critical situations. Your safety is our priority.
+    </Typography>
+    <Grid container spacing={3} sx={{ marginTop: 2 }}>
+      <Grid item xs={12} sm={6} md={6}>
+        <Typography>🚑 Immediate Medical Care Available</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} md={6}>
+        <Typography>📞 24/7 Contact for Emergencies</Typography>
+      </Grid>
+    </Grid>
+  </Paper>
+</Box>
+
 
         {/* Important Announcements */}
-        <Box sx={{
-          padding: 4,
-          backgroundColor: "#FFECB3",  // Soft yellow background color
-          borderRadius: 2,
-          boxShadow: 4,
-          display: "flex", // Flex to align image on right side
-          alignItems: "center", // Vertically center the content
-        }}>
-          <Paper elevation={3} sx={{ padding: 3, backgroundColor: "rgba(255, 255, 255, 0.7)", width: "70%" }}>
-            <Typography variant="h5" gutterBottom>
-              Important Announcements
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              Stay updated with the latest information and services available at our hospital:
-            </Typography>
-            <Paper sx={{
-              marginTop: 2,
-              padding: 2,
-              backgroundColor: "#FFF3E0",
-              borderRadius: 2,
-              boxShadow: 2,
-            }}>
-              <ul>
-                <li>24/7 Emergency Services</li>
-                <li>Free Health Check-Up Camps every Saturday</li>
-                <li>Online Appointment Booking and Consultation</li>
-              </ul>
-            </Paper>
-          </Paper>
-          <Box sx={{ marginLeft: 3 }}>
-            <img
-              src={announcementImage} // Announcement image
-              alt="Important Announcements"
-              style={{
-                width: "150px",
-                height: "150px",
-                borderRadius: "50%", // Circle form for the image
-                objectFit: "cover",
-              }}
-            />
-          </Box>
-        </Box>
+        <Box
+  sx={{
+    padding: 4,
+    backgroundColor: "#FFECB3", // Soft yellow background
+    borderRadius: 2,
+    boxShadow: 4,
+    display: "flex",
+    flexDirection: { xs: "column", md: "row-reverse" }, // Image on top for mobile, right for desktop
+    alignItems: "center",
+  }}
+>
+  {/* Image */}
+  <Box
+    sx={{
+      marginBottom: { xs: 3, md: 0 },
+      marginLeft: { md: 3 },
+      display: "flex",
+      justifyContent: "center",
+      width: { xs: "100%", md: "auto" },
+    }}
+  >
+    <img
+      src={announcementImage}
+      alt="Important Announcements"
+      style={{
+        width: "150px",
+        height: "150px",
+        borderRadius: "50%",
+        objectFit: "cover",
+      }}
+    />
+  </Box>
+
+  {/* Text */}
+  <Paper
+    elevation={3}
+    sx={{
+      padding: 3,
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
+      width: { xs: "100%", md: "70%" },
+    }}
+  >
+    <Typography variant="h5" gutterBottom>
+      Important Announcements
+    </Typography>
+    <Typography variant="body1" color="textSecondary">
+      Stay updated with the latest information and services available at our hospital:
+    </Typography>
+    <Paper
+      sx={{
+        marginTop: 2,
+        padding: 2,
+        backgroundColor: "#FFF3E0",
+        borderRadius: 2,
+        boxShadow: 2,
+      }}
+    >
+      <ul>
+        <li>24/7 Emergency Services</li>
+        <li>Free Health Check-Up Camps every Saturday</li>
+        <li>Online Appointment Booking and Consultation</li>
+      </ul>
+    </Paper>
+  </Paper>
+</Box>
+
       </Box>
     </>
   );

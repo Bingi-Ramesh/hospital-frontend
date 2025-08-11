@@ -138,7 +138,7 @@ function Doctors() {
                 />
               </Box>
 
-              <Box sx={{ flex: 1, padding: 2 }}>
+              <Box sx={{ flex: 1, padding: 1 }}>
                 <CardContent>
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Dr. {doctor.fullname}</Typography>
                   <Typography variant="body1" sx={{ color: 'text.secondary' }}>{doctor.specializations}</Typography>
@@ -169,7 +169,7 @@ function Doctors() {
                     onClick={() => handleOpenDialog(doctor)}
                     sx={{
                     
-                     
+                      mt: 1, 
                       borderColor: 'orange', // darker green border
                     
                     }}

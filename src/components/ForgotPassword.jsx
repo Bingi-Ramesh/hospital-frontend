@@ -21,15 +21,19 @@ export default function ForgotPassword() {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${apiBase}/api/patient-forgot-password`, { email });
+      const res = await axios.post(`${apiBase}/api/forgot-password`, { email });
   
       //alert(`OTP sent successfully check your inbox `); // for now showing directly
-      showSnack('OTP sent successfully check your inbox ','success')
+      console.log(res.data)
+      console.log(res.data.otp.otp)
+      showSnack(res.data.message,'info')
+     // showSnack('OTP sent successfully check your inbox ','success')
       setServerOtp(res.data.otp.otp.toString());
       setStep(2);
     } catch (err) {
       //alert(err.response?.data?.message || "Something went wrong");
-      showSnack(err.response?.data?.message || "Something went wrong",'error')
+      console.log(err)
+      //showSnack("Something went wrong",'error')
     }
   };
 
@@ -53,7 +57,7 @@ export default function ForgotPassword() {
       return;
     }
     try {
-      const res = await axios.post(`${apiBase}/api/update-patient-password`, {
+      const res = await axios.post(`${apiBase}/api/update-password`, {
         email,
         password,
       });

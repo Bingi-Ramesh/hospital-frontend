@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
   Container, Typography, Box, Grid, Card, Divider, Avatar, Snackbar, Alert,
-  Button, List, ListItem, ListItemText, ListItemIcon, IconButton
+  Button, List, ListItem, ListItemText, ListItemIcon, IconButton,TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -39,6 +43,81 @@ const Profile = () => {
       setPreview('');
     }
   }, [navigate]);
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState(""); // doctor or receptionist
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+    mobile: "",
+    age: "",
+  });
+  const handleOpen = (userType) => {
+    setType(userType);
+    setOpen(true);
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  
+  const handleSubmit = async () => {
+    try {
+      const url = type === "doctor"
+        ? `${API_HOST}/api/signup/doctor`
+        : `${API_HOST}/api/signup/receptionist`;
+  
+      const res=await axios.post(url, formData);
+      alert(res.data.message)
+      handleClose();
+    } catch (err) {
+      console.log(err)
+    }
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setFormData({ fullname: "", email: "", password: "", mobile: "", age: "" });
+  };
+  const [editOpen, setEditOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    fullname: '',
+    email: '',
+    age: '',
+    mobile:'',
+  });
+  const handleEditOpen = () => {
+    setEditForm({
+      fullname: userData.fullname || '',
+      email: userData.email || '',
+      age: userData.age || '',
+      mobile:userData.mobile || ''
+    });
+    setEditOpen(true);
+  };
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm(prev => ({ ...prev, [name]: value }));
+  };
+  const handleUpdateProfile = async () => {
+    try {
+      const { data } = await axios.post(`${API_HOST}/api/update-profile`, {
+        id: userData._id,
+        ...editForm
+      });
+  
+      setUserData(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setSnackbar({ open: true, message: 'Profile updated successfully', severity: 'success' });
+      setEditOpen(false);
+    } catch (err) {
+      console.error(err);
+      setSnackbar({ open: true, message: 'Update failed', severity: 'error' });
+    }
+  };
+        
 
   /* ─────────── helpers ─────────── */
   const getImgSrc = () => {
@@ -186,6 +265,7 @@ const Profile = () => {
             <ListItem> <Typography>Name:{userData.fullname || 'N/A'}</Typography> </ListItem>
            
             <ListItem> <Typography>Email:{userData.email || 'N/A'}</Typography> </ListItem>
+            <ListItem> <Typography>Mobile::{userData.mobile || 'N/A'}</Typography> </ListItem>
             <ListItem>  <Typography>Age:{userData.age || 'N/A'}</Typography> </ListItem>
             <ListItem button onClick={handleLogout}>
               <ListItemIcon><LogoutIcon sx={{ color: '#fff' }} /></ListItemIcon>
@@ -239,7 +319,47 @@ const Profile = () => {
           >
             Appointments
           </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#d32f2f",
+                "&:hover": { backgroundColor: "#9a0007" },
+              }}
+              onClick={handleEditOpen}
+            >
+              Update Profile
+            </Button>
+         
+         
+
         </Box>
+        {role === "admin" && (
+  <>
+  <Box  sx={{
+            display: "flex",
+            mt:3,
+            gap: 2,
+            justifyContent: "center",
+          }}>
+    <Button   variant="contained"
+              sx={{
+                backgroundColor: "#d32f2f",
+                "&:hover": { backgroundColor: "#9a0007" },
+              }} onClick={() => handleOpen("doctor")}>Add Doctor</Button>
+    <Button  variant="contained"
+              sx={{
+                backgroundColor: "#d32f2f",
+                "&:hover": { backgroundColor: "#9a0007" },
+              }} onClick={() => handleOpen("receptionist")}>Add Receptionist</Button>
+    </Box>
+  </>
+)}
+        {role === "doctor" && (
+  <Typography variant="body1" sx={{ mt: 2 }}>
+    {userData.description || "No description provided"}
+  </Typography>
+)}
       </Card>
     </Box>
 
@@ -255,6 +375,107 @@ const Profile = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+  <DialogTitle>
+    {type === "doctor" ? "Add Doctor" : "Add Receptionist"}
+  </DialogTitle>
+
+  <DialogContent>
+    <TextField
+      margin="dense"
+      label="Full Name"
+      name="fullname"
+      value={formData.fullname}
+      onChange={handleChange}
+      fullWidth
+    />
+    <TextField
+      margin="dense"
+      label="Email"
+      name="email"
+      type="email"
+      value={formData.email}
+      onChange={handleChange}
+      fullWidth
+    />
+    <TextField
+      margin="dense"
+      label="Password"
+      name="password"
+      type="password"
+      value={formData.password}
+      onChange={handleChange}
+      fullWidth
+    />
+    <TextField
+      margin="dense"
+      label="Mobile"
+      name="mobile"
+      value={formData.mobile}
+      onChange={handleChange}
+      fullWidth
+    />
+    <TextField
+      margin="dense"
+      label="Age"
+      name="age"
+      value={formData.age}
+      onChange={handleChange}
+      fullWidth
+    />
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={handleClose} color="error">Cancel</Button>
+    <Button onClick={handleSubmit} variant="contained" color="primary">
+      Submit
+    </Button>
+  </DialogActions>
+</Dialog>
+
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
+  <DialogTitle>Update Profile</DialogTitle>
+  <DialogContent>
+    <TextField
+      fullWidth
+      margin="dense"
+      label="Full Name"
+      name="fullname"
+      value={editForm.fullname}
+      onChange={handleEditChange}
+    />
+    <TextField
+      fullWidth
+      margin="dense"
+      label="Email"
+      name="email"
+      value={editForm.email}
+      onChange={handleEditChange}
+    />
+    <TextField
+      fullWidth
+      margin="dense"
+      label="Age"
+      name="age"
+      value={editForm.age}
+      onChange={handleEditChange}
+    />
+      <TextField
+      fullWidth
+      margin="dense"
+      label="Mobile"
+      name="mobile"
+      value={editForm.mobile}
+      onChange={handleEditChange}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setEditOpen(false)}>Cancel</Button>
+    <Button variant="contained" onClick={handleUpdateProfile}>Update</Button>
+  </DialogActions>
+</Dialog>
+
     </Box>
   );
 };

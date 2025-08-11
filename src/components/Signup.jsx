@@ -20,6 +20,7 @@ const Signup = () => {
     fullName: '',
     age: '',
     email: '',
+    mobile:'',
     password: '',
     
   });
@@ -34,7 +35,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { fullName, age, email, password } = formData;
+      const { fullName, age, email, password,mobile } = formData;
       const endpoint = `${API_BASE}/api/signup/patient`;
 
       await axios.post(endpoint, {
@@ -42,6 +43,7 @@ const Signup = () => {
         age,
         email,
         password,
+        mobile,
       });
 
       setSnackbar({ open: true, message: 'signup successful ', severity: 'success' });
@@ -51,6 +53,7 @@ const Signup = () => {
         age: '',
         email: '',
         password: '',
+        mobile:'',
      
       });
     } catch (err) {
@@ -97,6 +100,17 @@ const Signup = () => {
                 name="age"
                 type="number"
                 value={formData.age}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Mobile.No"
+                name="mobile"
+                type="number"
+                value={formData.mobile}
                 onChange={handleChange}
                 required
               />
