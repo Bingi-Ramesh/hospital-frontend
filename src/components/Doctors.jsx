@@ -26,12 +26,14 @@ function Doctors() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [appointmentDate, setAppointmentDate] = useState('');
-
+  const role = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   useEffect(() => {
+    // console.log(user)
     const fetchDoctors = async () => {
       setLoading(true);
       try {
+      
         const res = await axios.get(`${API_BASE}/api/getDoctors`);
         setDoctors(res.data.doctors);
       } catch (err) {
@@ -106,16 +108,36 @@ function Doctors() {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom textAlign="center" sx={{ color: '#8A2BE2' }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        textAlign="center"
+        sx={{ color: "#8A2BE2" }}
+      >
         Doctors
       </Typography>
 
-      <Grid container spacing={2} sx={{ padding: '20px' }}>
+      <Grid container spacing={2} sx={{ padding: "20px" }}>
         {doctors.map((doctor) => (
           <Grid item xs={12} sm={6} md={4} key={doctor.email}>
-            <Card sx={{ display: 'flex', flexDirection: 'row', maxWidth: 600, margin: 'auto' }}>
-              <Box sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: 2, mb: 5 }}>
-              {console.log(API_BASE,doctor.profileImg)};
+            <Card
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                maxWidth: 600,
+                margin: "auto",
+              }}
+            >
+              <Box
+                sx={{
+                  flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: 2,
+                  mb: 5,
+                }}
+              >
+                {console.log(API_BASE, doctor.profileImg)};
                 <img
                   // src={
                   //   doctor.profileImg
@@ -125,42 +147,50 @@ function Doctors() {
                   src={
                     doctor?.profileImg
                       ? `${API_BASE}${doctor.profileImg}`
-                      : '/default-profile.jpg'
+                      : "/default-profile.jpg"
                   }
                   alt={doctor.fullName}
                   style={{
                     width: 110,
                     height: 110,
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    border: '2px solid #ccc'
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid #ccc",
                   }}
                 />
               </Box>
 
               <Box sx={{ flex: 1, padding: 1 }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Dr. {doctor.fullname}</Typography>
-                  <Typography variant="body1" sx={{ color: 'text.secondary' }}>{doctor.specializations}</Typography>
-                  <Typography variant="body1" sx={{ color: 'text.secondary' }}>{doctor.course}</Typography>
+                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                    Dr. {doctor.fullname}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                    {doctor.specializations}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                    {doctor.course}
+                  </Typography>
                   {/* <Typography variant="body2" color="text.secondary">Experience: {doctor.experience || 0}</Typography> */}
                   <Button
                     size="small"
                     variant="outlined"
                     color="success"
-                    onClick={() => navigate(`/doctors/doctordescription/${doctor._id}`, { state: { doctor } })}
+                    onClick={() =>
+                      navigate(`/doctors/doctordescription/${doctor._id}`, {
+                        state: { doctor },
+                      })
+                    }
                     sx={{
                       mt: 2, // margin-top (theme spacing * 2 → usually 16px)
-                     
-                      borderColor: 'orange', // darker green border
-                    
+
+                      borderColor: "orange", // darker green border
                     }}
                   >
-                    View  Details
+                    View Details
                   </Button>
                   {/* <Typography variant="body2" color="text.secondary">{doctor.email}</Typography> */}
                 </CardContent>
-
                 <CardActions>
                   <Button
                     size="small"
@@ -168,14 +198,39 @@ function Doctors() {
                     color="success"
                     onClick={() => handleOpenDialog(doctor)}
                     sx={{
-                    
-                      mt: 1, 
-                      borderColor: 'orange', // darker green border
-                    
+                      mt: 1,
+                      borderColor: "orange", // darker green border
                     }}
                   >
                     Book Appointment
                   </Button>
+                </CardActions>
+
+                <CardActions>
+                  {user.specializations ? (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="success"
+                      sx={{ mt: 1, borderColor: "orange" }}
+                      onClick={() => {console.log(user)
+                        navigate("/chat-doctor", { state: {  user } })
+                      }}
+                    >
+                      View
+                    </Button>
+                  ) : // Render something else if needed for other roles, or null
+                  <Button
+                      size="small"
+                      variant="outlined"
+                      color="success"
+                      sx={{ mt: 1, borderColor: "orange" }}
+                      onClick={() =>{ console.log(user)
+                        navigate("/chat", { state: { doctor, user } })
+                      }}
+                    >
+                      Chat
+                    </Button>}
                 </CardActions>
               </Box>
             </Card>
@@ -189,28 +244,28 @@ function Doctors() {
           <TextField
             label="Doctor ID"
             fullWidth
-            value={selectedDoctor?._id || ''}
+            value={selectedDoctor?._id || ""}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2 }}
           />
           <TextField
             label="Doctor Name"
             fullWidth
-            value={selectedDoctor?.fullname || ''}
+            value={selectedDoctor?.fullname || ""}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2 }}
           />
           <TextField
             label="Patient ID"
             fullWidth
-            value={user._id || ''}
+            value={user._id || ""}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2 }}
           />
           <TextField
             label="Patient Name"
             fullWidth
-            value={user.fullname || ''}
+            value={user.fullname || ""}
             InputProps={{ readOnly: true }}
             sx={{ mb: 2 }}
           />
@@ -224,21 +279,28 @@ function Doctors() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmit} variant="contained">Submit</Button>
-          <Button onClick={handleCloseDialog} variant="outlined">Cancel</Button>
+          <Button onClick={handleSubmit} variant="contained">
+            Submit
+          </Button>
+          <Button onClick={handleCloseDialog} variant="outlined">
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
-   
     </>
   );
 }

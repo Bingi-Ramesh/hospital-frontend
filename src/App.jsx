@@ -15,6 +15,8 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import DoctorDescription from './components/DoctorDescription';
 import ForgotPassword from './components/ForgotPassword';
+import Chat from './components/Chat';
+import DoctorChat from './components/DoctorChat';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
@@ -27,7 +29,7 @@ console.log(isLoggedIn)
 
     return () => clearInterval(interval);
   }, []);
-
+  const user = JSON.parse(localStorage.getItem('user'));
   return (
     <Router>
       <Navbar loggedIn={isLoggedIn} />
@@ -38,6 +40,15 @@ console.log(isLoggedIn)
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reviews" element={<RatingsAndReviews />} />
           <Route path="/doctors" element={<Doctors />} />
+         
+<Route
+  path="/chat"
+  element= {<Chat />}
+/>
+<Route
+  path="/chat-doctor"
+  element= {<DoctorChat />}
+/>
           <Route path="/doctors/doctordescription/:id" element={<DoctorDescription />} />
           <Route path="/appointments" element={<Appointments />} />
         
